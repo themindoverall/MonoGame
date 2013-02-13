@@ -46,6 +46,9 @@ using Microsoft.Xna.Framework.Audio;
 #if IOS
 using MonoTouch.Foundation;
 using MonoTouch.AVFoundation;
+#elif MONOMAC
+using MonoMac.Foundation;
+using MonoMac.AVFoundation;
 #elif WINDOWS_MEDIA_SESSION
 using SharpDX;
 using SharpDX.MediaFoundation;
@@ -55,7 +58,7 @@ namespace Microsoft.Xna.Framework.Media
 {
     public sealed class Song : IEquatable<Song>, IDisposable
     {
-#if IOS
+#if IOS || MONOMAC
 		private AVAudioPlayer _sound;
 #elif PSM
         private PSSuiteSong _sound;
@@ -80,7 +83,7 @@ namespace Microsoft.Xna.Framework.Media
 		{			
 			_name = fileName;
 			
-#if IOS
+#if IOS || MONOMAC
 			_sound = AVAudioPlayer.FromUrl(NSUrl.FromFilename(fileName));
 			_sound.NumberOfLoops = 0;
             _sound.FinishedPlaying += OnFinishedPlaying;
@@ -127,7 +130,7 @@ namespace Microsoft.Xna.Framework.Media
 
                     if (_sound != null)
                     {
-#if IOS
+#if IOS || MONOMAC
                        _sound.FinishedPlaying -= OnFinishedPlaying;
 #endif
                         _sound.Dispose();
@@ -286,7 +289,7 @@ namespace Microsoft.Xna.Framework.Media
 		{
 			if (_sound == null)
 				return;			
-#if IOS
+#if IOS || MONOMAC
 
 			_sound.Play();
 #else
